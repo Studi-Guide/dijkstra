@@ -146,8 +146,7 @@ func benchmarkList(b *testing.B, nodes, list int, shortest bool) {
 	//====RESET TIMER BEFORE LOOP====
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		graph.setup(shortest, src, list)
-		graph.postSetupEvaluate(src, dest, shortest)
+		graph.postSetupEvaluate(src, dest, shortest, graph.setup(shortest, src, list))
 	}
 }
 
@@ -332,8 +331,7 @@ func testSolution(t *testing.T, best BestPath, wanterr error, filename string, f
 	var got BestPath
 	var gotAll BestPaths
 	if list >= 0 {
-		graph.setup(shortest, from, list)
-		got, err = graph.postSetupEvaluate(from, to, shortest)
+		got, err = graph.postSetupEvaluate(from, to, shortest, graph.setup(shortest, from, list))
 	} else if shortest {
 		got, err = graph.Shortest(from, to)
 	} else {
@@ -343,7 +341,7 @@ func testSolution(t *testing.T, best BestPath, wanterr error, filename string, f
 	testResults(t, got, best, shortest, filename)
 	if list >= 0 {
 		graph.setup(shortest, from, list)
-		gotAll, err = graph.postSetupEvaluateAll(from, to, shortest)
+		gotAll, err = graph.postSetupEvaluateAll(from, to, shortest, graph.setup(shortest, from, list))
 	} else if shortest {
 		gotAll, err = graph.ShortestAll(from, to)
 	} else {

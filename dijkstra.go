@@ -14,15 +14,17 @@ func (g *Graph) Longest(src, dest int) (BestPath, error) {
 	return g.evaluate(src, dest, false)
 }
 
-func (g *Graph) setup(shortest bool, src int, list int) {
+func (g *Graph) setup(shortest bool, src int, list int) dijkstraList {
 	//-1 auto list
 	//Get a new list regardless
+
+	var context dijkstraList
 	if list >= 0 {
-		g.forceList(list)
+		context = g.forceList(list)
 	} else if shortest {
-		g.forceList(-1)
+		context = g.forceList(-1)
 	} else {
-		g.forceList(-2)
+		context = g.forceList(-2)
 	}
 	//Reset state
 	g.visitedDest = false
@@ -36,13 +38,16 @@ func (g *Graph) setup(shortest bool, src int, list int) {
 		g.setDefaults(int64(math.MinInt64)+2, -1)
 		g.best = int64(math.MinInt64)
 	}
+
 	//Set the distance of initial vertex 0
 	g.Verticies[src].distance = 0
+
 	//Add the source vertex to the list
-	g.visiting.PushOrdered(&g.Verticies[src])
+	context.PushOrdered(&g.Verticies[src])
+	return context
 }
 
-func (g *Graph) forceList(i int) {
+func (g *Graph) forceList(i int) dijkstraList {
 	//-2 long auto
 	//-1 short auto
 	//0 short pq
@@ -52,33 +57,35 @@ func (g *Graph) forceList(i int) {
 	switch i {
 	case -2:
 		if len(g.Verticies) < 800 {
-			g.forceList(2)
+			return g.forceList(2)
 		} else {
-			g.forceList(0)
+			return g.forceList(0)
 		}
 		break
 	case -1:
 		if len(g.Verticies) < 800 {
-			g.forceList(3)
+			return g.forceList(3)
 		} else {
-			g.forceList(1)
+			return g.forceList(1)
 		}
 		break
 	case 0:
-		g.visiting = priorityQueueNewShort()
+		return priorityQueueNewShort()
 		break
 	case 1:
-		g.visiting = priorityQueueNewLong()
+		return priorityQueueNewLong()
 		break
 	case 2:
-		g.visiting = linkedListNewShort()
+		return linkedListNewShort()
 		break
 	case 3:
-		g.visiting = linkedListNewLong()
+		return linkedListNewLong()
 		break
 	default:
 		panic(i)
 	}
+
+	return nil
 }
 
 func (g *Graph) bestPath(src, dest int) BestPath {
@@ -95,17 +102,17 @@ func (g *Graph) bestPath(src, dest int) BestPath {
 
 func (g *Graph) evaluate(src, dest int, shortest bool) (BestPath, error) {
 	//Setup graph
-	g.setup(shortest, src, -1)
-	return g.postSetupEvaluate(src, dest, shortest)
+	graphContext := g.setup(shortest, src, -1)
+	return g.postSetupEvaluate(src, dest, shortest, graphContext)
 }
 
-func (g *Graph) postSetupEvaluate(src, dest int, shortest bool) (BestPath, error) {
+func (g *Graph) postSetupEvaluate(src, dest int, shortest bool, graphContext dijkstraList) (BestPath, error) {
 	var current *Vertex
 	oldCurrent := -1
-	for g.visiting.Len() > 0 {
+	for graphContext.Len() > 0 {
 		//Visit the current lowest distanced Vertex
 		//TODO WTF
-		current = g.visiting.PopOrdered()
+		current = graphContext.PopOrdered()
 		if oldCurrent == current.ID {
 			continue
 		}
@@ -134,7 +141,7 @@ func (g *Graph) postSetupEvaluate(src, dest int, shortest bool) (BestPath, error
 				}
 				//Push this updated Vertex into the list to be evaluated, pushes in
 				// sorted form
-				g.visiting.PushOrdered(&g.Verticies[v])
+				graphContext.PushOrdered(&g.Verticies[v])
 			}
 		}
 	}

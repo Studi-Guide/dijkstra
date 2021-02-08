@@ -12,16 +12,16 @@ func (g *Graph) LongestAll(src, dest int) (BestPaths, error) {
 
 func (g *Graph) evaluateAll(src, dest int, shortest bool) (BestPaths, error) {
 	//Setup graph
-	g.setup(shortest, src, -1)
-	return g.postSetupEvaluateAll(src, dest, shortest)
+	context := g.setup(shortest, src, -1)
+	return g.postSetupEvaluateAll(src, dest, shortest, context)
 }
 
-func (g *Graph) postSetupEvaluateAll(src, dest int, shortest bool) (BestPaths, error) {
+func (g *Graph) postSetupEvaluateAll(src, dest int, shortest bool, context dijkstraList) (BestPaths, error) {
 	var current *Vertex
 	oldCurrent := -1
-	for g.visiting.Len() > 0 {
+	for context.Len() > 0 {
 		//Visit the current lowest distanced Vertex
-		current = g.visiting.PopOrdered()
+		current = context.PopOrdered()
 		if oldCurrent == current.ID {
 			continue
 		}
@@ -57,7 +57,7 @@ func (g *Graph) postSetupEvaluateAll(src, dest int, shortest bool) (BestPaths, e
 				}
 				//Push this updated Vertex into the list to be evaluated, pushes in
 				// sorted form
-				g.visiting.PushOrdered(&g.Verticies[v])
+				context.PushOrdered(&g.Verticies[v])
 			}
 		}
 	}
