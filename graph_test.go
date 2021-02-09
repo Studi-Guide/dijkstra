@@ -22,14 +22,14 @@ func TestAddVertex(t *testing.T) {
 	g := NewGraph()
 	g.AddVertex(99)
 	got, err := g.GetVertex(98)
-	if got.ID == 99 || err != nil {
-		t.Error("should not have had ID set and err should be nil")
+	if got != nil || err == nil {
+		t.Error("should not have had ID set and err should not be nil")
 	}
 	for i := 0; i <= 10; i++ {
 		g.AddVertex(i)
 	}
 	v := g.AddNewVertex()
-	if v.ID != 11 {
+	if v.ID != 12 {
 		t.Error("Adding self assigned vertex fail")
 	}
 	g = NewGraph()

@@ -5,8 +5,8 @@ import (
 )
 
 type dijkstraList interface {
-	PushOrdered(*Vertex)
-	PopOrdered() *Vertex
+	PushOrdered(*VertexResult)
+	PopOrdered() *VertexResult
 	Len() int
 }
 
@@ -34,8 +34,8 @@ type priorityQueueShort struct{ priorityQueueBase }
 type priorityQueueLong struct{ priorityQueueBase }
 type priorityQueueInterface interface {
 	sort.Interface
-	Push(x *Vertex)
-	Pop() *Vertex
+	Push(x *VertexResult)
+	Pop() *VertexResult
 }
 type priorityQueueWrapper struct{ priorityQueueInterface }
 
@@ -51,7 +51,7 @@ func (pq priorityQueueLong) Less(i, j int) bool {
 
 // An Item is something we manage in a priority queue.
 type Item struct {
-	value *Vertex // The value of the item; arbitrary.
+	value *VertexResult // The value of the item; arbitrary.
 }
 type priorityQueueBase []*Item
 
@@ -61,7 +61,7 @@ func (pq priorityQueueBase) Swap(i, j int) {
 	pq[i], pq[j] = pq[j], pq[i]
 }
 
-func (pq *priorityQueueBase) Push(v *Vertex) {
+func (pq *priorityQueueBase) Push(v *VertexResult) {
 	/*	id := v.(*Vertex).ID
 		for _, v := range *pq {
 			if v.value.ID == id {
@@ -71,19 +71,19 @@ func (pq *priorityQueueBase) Push(v *Vertex) {
 	*pq = append(*pq, &Item{v})
 }
 
-func (pq *priorityQueueWrapper) PushOrdered(v *Vertex) {
+func (pq *priorityQueueWrapper) PushOrdered(v *VertexResult) {
 	pq.Push(v)
 	pq.up(pq.Len() - 1)
 }
 
-func (pq *priorityQueueWrapper) PopOrdered() *Vertex {
+func (pq *priorityQueueWrapper) PopOrdered() *VertexResult {
 	n := pq.Len() - 1
 	pq.Swap(0, n)
 	pq.down(0, n)
 	return pq.Pop()
 }
 
-func (pq *priorityQueueBase) Pop() *Vertex {
+func (pq *priorityQueueBase) Pop() *VertexResult {
 	old := *pq
 	n := len(old)
 	item := old[n-1]

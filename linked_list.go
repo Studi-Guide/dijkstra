@@ -18,7 +18,7 @@ type element struct {
 	list *linkedList
 
 	// The value stored with this element.
-	Value *Vertex
+	Value *VertexResult
 }
 
 // linkedList represents a doubly linked list.
@@ -40,12 +40,12 @@ func linkedListNewLong() dijkstraList {
 }
 
 // Init initializes or clears list l.
-func (l *linkedList) PushOrdered(v *Vertex) {
+func (l *linkedList) PushOrdered(v *VertexResult) {
 	l.pushOrdered(v)
 }
 
 // Init initializes or clears list l.
-func (l *linkedList) PopOrdered() *Vertex {
+func (l *linkedList) PopOrdered() *VertexResult {
 	if l.short {
 		return l.popBack()
 	}
@@ -75,7 +75,7 @@ func (l *linkedList) front() *element {
 }
 
 //popFront pops the Vertex off the front of the list
-func (l *linkedList) popFront() *Vertex {
+func (l *linkedList) popFront() *VertexResult {
 	e := l.front()
 	if e.list == l {
 		// if e.list == l, l must have been initialized when e was inserted
@@ -86,7 +86,7 @@ func (l *linkedList) popFront() *Vertex {
 }
 
 //popFront pops the Vertex off the front of the list
-func (l *linkedList) popBack() *Vertex {
+func (l *linkedList) popBack() *VertexResult {
 	e := l.back()
 	if e.list == l {
 		// if e.list == l, l must have been initialized when e was inserted
@@ -113,7 +113,7 @@ func (l *linkedList) lazyinit() {
 
 //pushOrdered pushes the value into the linked list in the correct position
 // (ascending)
-func (l *linkedList) pushOrdered(v *Vertex) *element {
+func (l *linkedList) pushOrdered(v *VertexResult) *element {
 	l.lazyinit()
 	if l.len == 0 {
 		return l.pushFront(v)
@@ -145,7 +145,7 @@ func (l *linkedList) insert(e, at *element) *element {
 }
 
 // insertValue is a convenience wrapper for insert(&element{Value: v}, at).
-func (l *linkedList) insertValue(v *Vertex, at *element) *element {
+func (l *linkedList) insertValue(v *VertexResult, at *element) *element {
 	return l.insert(&element{Value: v}, at)
 }
 
@@ -161,7 +161,7 @@ func (l *linkedList) remove(e *element) *element {
 }
 
 // pushFront inserts a new element e with value v at the front of list l and returns e.
-func (l *linkedList) pushFront(v *Vertex) *element {
+func (l *linkedList) pushFront(v *VertexResult) *element {
 	l.lazyinit()
 	return l.insertValue(v, &l.root)
 }

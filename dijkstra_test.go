@@ -232,7 +232,7 @@ func benchmarkMM(b *testing.B, filename string) {
 
 func benchmarkAR(b *testing.B, filename string) {
 	rcg, _ := Import(filename)
-	arg := setupAR(rcg)
+	arg := setupAR(&rcg)
 	rcsrc, rcdest := 0, len(rcg.Verticies)-1
 	src, dest := "0", strconv.Itoa(rcdest)
 	rcgot, _ := rcg.Shortest(rcsrc, rcdest)
@@ -255,7 +255,7 @@ func benchmarkAR(b *testing.B, filename string) {
 func benchmarkProfQ(b *testing.B, filename string) {
 	var g *pq.Graph
 	rcg, _ := Import(filename)
-	pqmap := setupPq(rcg)
+	pqmap := setupPq(&rcg)
 	g = pq.NewGraph(pqmap)
 	src, dest := 0, g.Len()-1
 	rcsrc, rcdest := 0, len(rcg.Verticies)-1
@@ -295,7 +295,7 @@ func benchmarkRCall(b *testing.B, filename string) {
 	}
 }
 
-func setupAR(rcg Graph) ar.Graph {
+func setupAR(rcg *Graph) ar.Graph {
 	g := map[string]map[string]int{}
 	for _, v := range rcg.Verticies {
 		sv := strconv.Itoa(v.ID)
@@ -307,7 +307,7 @@ func setupAR(rcg Graph) ar.Graph {
 	return g
 }
 
-func setupPq(rcg Graph) map[int]pq.Vertex {
+func setupPq(rcg *Graph) map[int]pq.Vertex {
 	vs := map[int]pq.Vertex{}
 	for _, v := range rcg.Verticies {
 		temp := pq.Vertex{}
@@ -322,9 +322,7 @@ func setupPq(rcg Graph) map[int]pq.Vertex {
 }
 
 func testSolution(t *testing.T, best BestPath, wanterr error, filename string, from, to int, shortest bool, list int) {
-	var err error
-	var graph Graph
-	graph, err = Import(filename)
+	graph, err := Import(filename)
 	if err != nil {
 		t.Fatal(err, filename)
 	}

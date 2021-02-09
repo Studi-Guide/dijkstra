@@ -12,6 +12,7 @@ import (
 //Import imports a graph from the specified file returns the Graph, a map for
 // if the nodes are not integers and an error if needed.
 func Import(filename string) (g Graph, err error) {
+	g = *NewGraph()
 	g.usingMap = false
 	var lowestIndex int
 	var i int
@@ -46,14 +47,15 @@ func Import(filename string) (g Graph, err error) {
 				lowestIndex++
 			}
 		}
-		if temp := len(g.Verticies); temp <= i { //Extend if we have to
-			g.Verticies = append(g.Verticies, make([]Vertex, 1+i-len(g.Verticies))...)
-			for ; temp < len(g.Verticies); temp++ {
-				g.Verticies[temp].ID = temp
-				g.Verticies[temp].arcs = map[int]int64{}
-				g.Verticies[temp].bestVerticies = []int{-1}
+
+		if _, ok := g.Verticies[i]; !ok {
+			g.Verticies[i] = &Vertex{
+				ID:   i,
+				arcs: map[int]int64{},
 			}
+			//do something here
 		}
+
 		if len(f) == 1 {
 			//if there is no FROM here
 			continue
@@ -83,6 +85,7 @@ func Import(filename string) (g Graph, err error) {
 					return
 				}
 			}
+
 			g.Verticies[i].arcs[arc] = dist
 		}
 	}

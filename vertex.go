@@ -6,32 +6,27 @@ type Vertex struct {
 	//ID of the Vertex
 	ID int
 	//Best distance to the Vertex
-	distance      int64
-	bestVerticies []int
+	// distance      int64
+	// bestVerticies []int
 	//A set of all weights to the nodes in the map
 	arcs map[int]int64
 }
 
 //NewVertex creates a new vertex
 func NewVertex(ID int) *Vertex {
-	return &Vertex{ID: ID, bestVerticies: []int{-1}, arcs: map[int]int64{}}
+	return &Vertex{ID: ID, arcs: map[int]int64{}}
 }
 
 //AddVerticies adds the listed verticies to the graph, overwrites any existing
 // Vertex with the same ID.
 func (g *Graph) AddVerticies(verticies ...Vertex) {
 	for _, v := range verticies {
-		v.bestVerticies = []int{-1}
-		if v.ID >= len(g.Verticies) {
-			newV := make([]Vertex, v.ID+1-len(g.Verticies))
-			g.Verticies = append(g.Verticies, newV...)
-		}
-		g.Verticies[v.ID] = v
+		g.Verticies[v.ID] = &v
 	}
 }
 
-func (v *Vertex) containsBest(id int) bool {
-	for _, bestVertex := range v.bestVerticies {
+func (v *Vertex) containsBest(id int, ctx Context) bool {
+	for _, bestVertex := range ctx.VertexResults[v.ID].bestVerticies {
 		if bestVertex == id {
 			return true
 		}
