@@ -6,12 +6,6 @@ import (
 	"reflect"
 	"strconv"
 	"testing"
-
-	ar "github.com/albertorestifo/dijkstra"
-
-	pq "github.com/RyanCarrier/dijkstra-1"
-	mm "github.com/mattomatic/dijkstra/dijkstra"
-	mmg "github.com/mattomatic/dijkstra/graph"
 )
 
 //pq "github.com/Professorq/dijkstra"
@@ -150,7 +144,7 @@ func benchmarkList(b *testing.B, nodes, list int, shortest bool) {
 	}
 }
 
-func BenchmarkAll(b *testing.B) {
+/*func BenchmarkAll(b *testing.B) {
 	nodeIterations := 6
 	for i, n := range benchNames {
 		nodes := 1
@@ -168,13 +162,13 @@ func BenchmarkAll(b *testing.B) {
 		nodes *= 4
 		os.Remove("testdata/bench/" + strconv.Itoa(nodes) + ".txt")
 	}
-}
+}*/
 
 /*
 //Mattomatics does not work.
 func BenchmarkMattomaticNodes4(b *testing.B)    { benchmarkAlt(b, 4, 3) }
 */
-func benchmarkAlt(b *testing.B, nodes, i int) {
+/*func benchmarkAlt(b *testing.B, nodes, i int) {
 	filename := "testdata/bench/" + strconv.Itoa(nodes) + ".txt"
 	if _, err := os.Stat(filename); err != nil {
 		g := Generate(nodes)
@@ -198,8 +192,8 @@ func benchmarkAlt(b *testing.B, nodes, i int) {
 		b.Error("You're retarded")
 	}
 }
-
-func benchmarkMM(b *testing.B, filename string) {
+*/
+/*func benchmarkMM(b *testing.B, filename string) {
 	rcg, _ := Import(filename)
 	mg := mmg.LoadGraph(filename)
 	rcsrc, rcdest := 0, len(rcg.Verticies)-1
@@ -274,7 +268,7 @@ func benchmarkProfQ(b *testing.B, filename string) {
 	for i := 0; i < b.N; i++ {
 		pq.NewGraph(pqmap).ShortestPath(src, dest)
 	}
-}
+}*/
 
 func benchmarkRC(b *testing.B, filename string) {
 	graph, _ := Import(filename)
@@ -295,7 +289,7 @@ func benchmarkRCall(b *testing.B, filename string) {
 	}
 }
 
-func setupAR(rcg *Graph) ar.Graph {
+/*func setupAR(rcg *Graph) ar.Graph {
 	g := map[string]map[string]int{}
 	for _, v := range rcg.Verticies {
 		sv := strconv.Itoa(v.ID)
@@ -305,9 +299,9 @@ func setupAR(rcg *Graph) ar.Graph {
 		}
 	}
 	return g
-}
+}*/
 
-func setupPq(rcg *Graph) map[int]pq.Vertex {
+/*func setupPq(rcg *Graph) map[int]pq.Vertex {
 	vs := map[int]pq.Vertex{}
 	for _, v := range rcg.Verticies {
 		temp := pq.Vertex{}
@@ -320,7 +314,7 @@ func setupPq(rcg *Graph) map[int]pq.Vertex {
 	}
 	return vs
 }
-
+*/
 func testSolution(t *testing.T, best BestPath, wanterr error, filename string, from, to int, shortest bool, list int) {
 	graph, err := Import(filename)
 	if err != nil {
