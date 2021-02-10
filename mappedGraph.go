@@ -55,9 +55,11 @@ func (g *Graph) AddMappedArc(Source, Destination string, Distance int64) error {
 //AddArc is the default method for adding an arc from a Source Vertex to a
 // Destination Vertex
 func (g *Graph) AddArc(Source, Destination int, Distance int64) error {
-	if len(g.Verticies) <= Source || len(g.Verticies) <= Destination {
+	if vertex, ok := g.Verticies[Source]; ok {
+		vertex.AddArc(Destination, Distance)
+	} else {
 		return errors.New("Source/Destination not found")
 	}
-	g.Verticies[Source].AddArc(Destination, Distance)
+
 	return nil
 }
