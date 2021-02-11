@@ -5,12 +5,12 @@ import (
 )
 
 //Shortest calculates the shortest path from src to dest
-func (g *Graph) Shortest(src, dest int) (BestPath, error) {
+func (g Graph) Shortest(src, dest int) (BestPath, error) {
 	return g.evaluate(src, dest, true)
 }
 
 //Longest calculates the longest path from src to dest
-func (g *Graph) Longest(src, dest int) (BestPath, error) {
+func (g Graph) Longest(src, dest int) (BestPath, error) {
 	return g.evaluate(src, dest, false)
 }
 
